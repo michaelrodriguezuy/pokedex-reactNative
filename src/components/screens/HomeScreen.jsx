@@ -1,10 +1,19 @@
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { usePokemonPaginate } from "../../hooks/usePokemonPaginate";
 import PokemonCard from "../common/PokemonCard";
 
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const { pokemonList, loadPokemons } = usePokemonPaginate();
+  const { top } = useSafeAreaInsets(); //devuelve por ejemplo en este caso el valor del top real, es el espacio que hay entre el notch y el header real de la pantalla
 
   return (
     <>
@@ -22,18 +31,34 @@ export default function HomeScreen() {
           <FlatList
             data={pokemonList}
             numColumns={2}
-            keyExtractor={(pokemon) => String(pokemon.id)} //el keyExtractor es para que cada item de la lista tenga un id unico, al igual que Key en react, en este caso tiene que ser si o si un string
-            renderItem={({ item }) => <PokemonCard pokemon={item}/>  } //este es el item que viene de cada elemento del pokemonList
-            ListHeaderComponent={<Text style={styles.title}> Pokedex</Text>}
+            //el keyExtractor es para que cada item de la lista tenga un id unico, al igual que Key en react, en este caso tiene que ser si o si un string
+            keyExtractor={(pokemon) => String(pokemon.id)}
+            // keyExtractor={(pokemon, index) => String(index)}
+
+            renderItem={({ item }) => <PokemonCard pokemon={item} />} //este es el item que viene de cada elemento del pokemonList
+            ListHeaderComponent={
+              <Text
+                style={{
+                  ...styles.title,
+                  top: top+20,
+                  marginBottom: 40,
+                  paddingBottom: 10,
+                }}
+              >
+                {" "}
+                Pokedex
+              </Text>
+            }
             showsVerticalScrollIndicator={false}
             // onEndReached={loadPokemons}
             // onEndReachedThreshold={0.4}
             // columnWrapperStyle={{ justifyContent: "space-between" }}
-            ListFooterComponent={<ActivityIndicator size="large" color="blue" />}
+            ListFooterComponent={
+              <ActivityIndicator size="large" color="blue" />
+            }
             onEndReached={loadPokemons}
             onEndReachedThreshold={0.3}
           />
-
         </View>
       )}
     </>

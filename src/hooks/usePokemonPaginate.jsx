@@ -25,7 +25,7 @@ export const usePokemonPaginate = () => {
   };
 
   const [pokemonList, setPokemonList] = useState([]);
-//   console.log("pokemonList:", pokemonList);
+  //   console.log("pokemonList:", pokemonList);
 
   const [nextPageUrl, setNextPageUrl] = useState(
     "https://pokeapi.co/api/v2/pokemon?limit=10"
@@ -49,7 +49,7 @@ export const usePokemonPaginate = () => {
       // console.log("datos del pokemon:",res.data);
       return res.data;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
@@ -63,13 +63,15 @@ export const usePokemonPaginate = () => {
           id: pokemonDetail.id,
           name: pokemonDetail.name,
           type: pokemonDetail.types[0].type.name,
-          image: pokemonDetail.sprites.other.dream_world.front_default,
-          // image2: pokemonDetail.sprites.other["official-artwork"].front_default, //en este ejemplo vemos como acceder a un objeto que tiene un guion medio
-          color: POKEMON_TYPE_COLORS[pokemonDetail.types[0].type.name.toLowerCase()], //el type va en corchetes porque es un string
+          //   picture: pokemonDetail.sprites.other.dream_world.front_default,
+          picture:
+            pokemonDetail.sprites.other["official-artwork"].front_default, //en este ejemplo vemos como acceder a un objeto que tiene un guion medio
+          color:
+            POKEMON_TYPE_COLORS[pokemonDetail.types[0].type.name.toLowerCase()], //el type va en corchetes porque es un string
         });
-        // setPokemonList([...pokemonList, ...newPokemonList]);  //esta es una forma de setear el estado, lo que ya tenia mas lo nuevo
-        setPokemonList((prevState) => [...prevState, ...newPokemonList]); //esta es otra forma de setear el estado, usando callback
       }
+      // setPokemonList([...pokemonList, ...newPokemonList]);  //esta es una forma de setear el estado, lo que ya tenia mas lo nuevo
+      setPokemonList((prevState) => [...prevState, ...newPokemonList]); //esta es otra forma de setear el estado, usando callback
     } catch (error) {
       console.log(error);
     }
